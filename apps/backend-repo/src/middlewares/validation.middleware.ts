@@ -1,21 +1,25 @@
 import { NextFunction, Request, Response } from "express";
-import { z } from "zod";
+import * as yup from "yup";
 
-export function validate(schema: z.ZodTypeAny ){
+export function validate(schema: yup.ObjectSchema<yup.AnyObject> ){
   return async function(req: Request, res: Response, next: NextFunction) {
-    const {success, error} = await schema.safeParse(req.body);
-    if (success) {
-      next();
-      return;
-    }
-
-    const issue = error.issues[0];
-    res.statusCode = 400;
     
-    // TODO: format error messages so its easier to handle
-    // https://zod.dev/ERROR_HANDLING
-    res.json({
-      message: `${issue.path[0]} ${issue.message}`,
-    });
+    try{
+      await schema.validate(req.body, {
+        strict: true,
+      });
+      next();
+    } catch (error) {
+      console.log("err", (error as Error).message);
+      if (error instanceof yup.ValidationError) {
+        res.statusCode = 400;
+        res.json({
+          message: error.errors[0],
+        });
+        return;
+      }
+
+      throw new Error('Error');
+    }
   }
 }
