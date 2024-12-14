@@ -3,11 +3,11 @@ import Form, { FormFieldProps } from '@/components/Form'
 import { TextInput } from '@/components/inputs/TextInput'
 import { UserUpdate } from '@/types/user.types'
 import React, { useState } from 'react'
-import * as yup from 'yup';
 import { useUserContentContext } from './UserContent';
 import { updateUser, useGetUserDetail } from '@/api/users/user.api';
 import { Typography } from '@mui/material';
 import { show } from '@/components/Toast';
+import { userUpdateValidation } from '@repo/data-model/users'
 
 export interface LoginFormProps {
   onSubmit: (data: UserUpdate) => void;
@@ -47,6 +47,7 @@ export const UserUpdateForm = () => {
         submitLabel={'Update'}
         data={data?.data || {} as UserUpdate}
         onSubmit={onSubmit}
+        validation={userUpdateValidation}
       />
     </>
   )
@@ -56,12 +57,10 @@ const userFields: FormFieldProps<UserUpdate> = {
   name: {
     label: 'Name',
     input: TextInput,
-    validation: yup.string().required(),
   },
   email: {
     label: 'Email',
     input: TextInput,
-    validation: yup.string().required(),
     props: {
       readOnly: true,
     }
@@ -69,11 +68,9 @@ const userFields: FormFieldProps<UserUpdate> = {
   phoneNumber: {
     label: 'Phone',
     input: TextInput,
-    validation: yup.string().min(7).max(18),
   },
   address: {
     label: 'address',
     input: TextInput,
-    validation: yup.string(),
   },
 }

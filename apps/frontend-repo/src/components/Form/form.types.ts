@@ -1,10 +1,11 @@
 import { FormikHelpers } from 'formik';
 import { FC } from 'react';
-import { AnySchema } from 'yup';
+import { AnySchema, AnyObjectSchema } from 'yup';
 
 export interface FormProps<T> {
   fields: FormFieldProps<T>;
   data?: T;
+  validation?: AnyObjectSchema,
   onSubmit?: (data: T, helper: FormikHelpers<T>) => void;
   submitLabel?: string;
   loading?: boolean;

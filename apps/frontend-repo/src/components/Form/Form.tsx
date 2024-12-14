@@ -7,23 +7,29 @@ import { LoadingButton } from '../LoadingButton';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const Form = <T extends Record<string, any>>(props: FormProps<T>) => {
-  const { onSubmit, data, fields, submitLabel, loading, readOnly} = props;
+  const { onSubmit, data, fields, submitLabel, loading, readOnly, validation} = props;
+
+  let validationSchema = validation;
 
   // TODO: use effect when need dynamic changes
   const fieldNames = Object.keys(fields);
-  const yupObject = fieldNames.reduce((res, key) => {
-    const field = fields[key]!;
-    if(field.validation) {
-      res[key] = field.validation;
-    }
-    return res;
-  }, {} as AnyObject);
+  if (!validationSchema) {
+    const yupObject = fieldNames.reduce((res, key) => {
+      const field = fields[key]!;
+      if(field.validation) {
+        res[key] = field.validation;
+      }
+      return res;
+    }, {} as AnyObject);
+
+    validationSchema = object(yupObject);
+  }
 
   const { values, errors, submitForm, setFieldValue } = useFormik<T>({
     onSubmit: onSubmit || console.log,
     initialValues: data || {} as T,
     enableReinitialize: true,
-    validationSchema: object(yupObject),
+    validationSchema,
     validateOnBlur: false,
     validateOnChange: false,
   });

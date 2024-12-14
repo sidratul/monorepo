@@ -18,14 +18,11 @@ export const patch = async <T,D>(url: string, data: D) => {
     method: 'PATCH'
   })
 
-  console.log("res", res);
-
   return getFetchResponse(res) as T;
 }
 
 const getFetchResponse = async (res: Response) => {
   const resJson = await res.json();
-  console.log('res.status', res.status);
   if (res.status === 200) {
     return resJson;
   }

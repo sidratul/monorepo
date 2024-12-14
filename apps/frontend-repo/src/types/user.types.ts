@@ -1,12 +1,6 @@
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  address: string;
-  phoneNumber: string;
-}
-
-export type UserUpdate = Omit<User, 'id'>;
+import { User as UserInterface, UserUpdateData } from '@repo/data-model/users';
+export type User = UserInterface;
+export type UserUpdate = UserUpdateData;
 
 export interface UserLogin extends Required<Pick<User, 'email'>> {
   password: string
