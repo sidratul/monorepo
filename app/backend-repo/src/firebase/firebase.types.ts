@@ -1,0 +1,1 @@
+export type FirestoreDoc = FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData, FirebaseFirestore.DocumentData>
